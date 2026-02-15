@@ -116,16 +116,6 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     return true;
   }
 
-  if (request.type === 'EVERYALT_GET_LOG') {
-    import('./lib/utils.js').then((m) => m.getLog()).then(sendResponse);
-    return true;
-  }
-
-  if (request.type === 'EVERYALT_CLEAR_LOG') {
-    import('./lib/utils.js').then((m) => m.clearLog()).then(sendResponse);
-    return true;
-  }
-
   if (request.type === 'EVERYALT_FETCH_BASE64') {
     imageUrlToBase64(request.imageUrl)
       .then((data) => sendResponse({ success: true, data }))
