@@ -254,6 +254,7 @@ select {
   align-items: center;
   gap: 12px;
   margin-top: 8px;
+  margin-bottom: 24px;
 }
 
 .everyalt-save-status {
@@ -267,6 +268,105 @@ select {
 
 .everyalt-save-status.error {
   color: #dc2626;
+}
+
+/* ── Generation Log ──────────────────────────────────────────── */
+
+.everyalt-log-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.everyalt-log-header h2 {
+  margin-bottom: 0;
+}
+
+.everyalt-log-container {
+  margin-top: 8px;
+}
+
+.everyalt-log-empty {
+  color: #9ca3af;
+  font-size: 13px;
+  font-style: italic;
+}
+
+.everyalt-log-row {
+  display: flex;
+  gap: 12px;
+  padding: 10px 0;
+  border-bottom: 1px solid #f3f4f6;
+}
+
+.everyalt-log-row:last-child {
+  border-bottom: none;
+}
+
+.everyalt-log-row.is-error {
+  background: #fef2f2;
+  margin: 0 -12px;
+  padding: 10px 12px;
+  border-radius: 6px;
+  border-bottom: none;
+  margin-bottom: 4px;
+}
+
+.everyalt-log-time {
+  flex-shrink: 0;
+  width: 74px;
+  font-size: 11px;
+  color: #9ca3af;
+  padding-top: 2px;
+  line-height: 1.4;
+}
+
+.everyalt-log-body {
+  flex: 1;
+  min-width: 0;
+}
+
+.everyalt-log-alt {
+  margin: 0 0 2px;
+  font-size: 13px;
+  color: #1f2937;
+  line-height: 1.4;
+  word-break: break-word;
+}
+
+.everyalt-log-meta {
+  display: block;
+  font-size: 11px;
+  color: #6b7280;
+}
+
+.everyalt-log-error-msg {
+  margin: 0 0 2px;
+  font-size: 13px;
+  color: #dc2626;
+  line-height: 1.4;
+  word-break: break-word;
+}
+
+.everyalt-log-url {
+  display: block;
+  font-size: 11px;
+  color: #9ca3af;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin-top: 2px;
+}
+
+.everyalt-log-totals {
+  margin-top: 12px;
+  padding: 10px 12px;
+  background: #f9fafb;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  font-size: 12px;
+  font-weight: 600;
+  color: #374151;
 }
 
 /* ── Footer ──────────────────────────────────────────────────── */

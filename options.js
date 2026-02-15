@@ -156,6 +156,113 @@ saveBtn.addEventListener('click', async () => {
   saveBtn.disabled = false;
 });
 
+// ── Generation Log ────────────────────────────────────────────
+
+const logContainer = document.getElementById('log-container');
+const logTotals = document.getElementById('log-totals');
+const clearLogBtn = document.getElementById('clear-log-btn');
+
+function loadLog() {
+  chrome.storage.local.get(['generationLog'], (result) => {
+    const log = result.generationLog || [];
+    if (log.length === 0) {
+      logContainer.innerHTML =
+        '<p class="everyalt-log-empty">No generations yet. Right-click an image to get started.</p>';
+      logTotals.style.display = 'none';
+      return;
+    }
+
+    renderLog(log);
+  });
+}
+
+function renderLog(log) {
+  logContainer.innerHTML = '';
+  let totalTokens = 0;
+  let totalCostUsd = 0;
+  let successCount = 0;
+  let errorCount = 0;
+
+  log.forEach((entry) => {
+    const row = document.createElement('div');
+    row.className = 'everyalt-log-row' + (entry.status === 'error' ? ' is-error' : '');
+
+    // Timestamp
+    const time = document.createElement('span');
+    time.className = 'everyalt-log-time';
+    time.textContent = formatTime(entry.timestamp);
+    row.appendChild(time);
+
+    // Main content
+    const body = document.createElement('div');
+    body.className = 'everyalt-log-body';
+
+    if (entry.status === 'success') {
+      successCount++;
+      const altEl = document.createElement('p');
+      altEl.className = 'everyalt-log-alt';
+      altEl.textContent = entry.altText || '(empty)';
+      body.appendChild(altEl);
+
+      const meta = document.createElement('span');
+      meta.className = 'everyalt-log-meta';
+      const tokens = entry.cost?.tokens?.total || 0;
+      const cents = entry.cost?.costCents || '—';
+      meta.textContent = `${tokens} tokens \u00B7 ${cents}`;
+      totalTokens += tokens;
+      totalCostUsd += entry.cost?.totalUsd || 0;
+      body.appendChild(meta);
+    } else {
+      errorCount++;
+      const errEl = document.createElement('p');
+      errEl.className = 'everyalt-log-error-msg';
+      errEl.textContent = entry.error || 'Unknown error';
+      body.appendChild(errEl);
+    }
+
+    // Image URL (truncated)
+    if (entry.imageUrl) {
+      const urlEl = document.createElement('span');
+      urlEl.className = 'everyalt-log-url';
+      urlEl.title = entry.imageUrl;
+      urlEl.textContent = truncateUrl(entry.imageUrl, 60);
+      body.appendChild(urlEl);
+    }
+
+    row.appendChild(body);
+    logContainer.appendChild(row);
+  });
+
+  // Totals bar
+  if (successCount > 0) {
+    const totalCents = (totalCostUsd * 100).toFixed(4) + '\u00A2';
+    logTotals.textContent =
+      `${successCount} generation${successCount !== 1 ? 's' : ''}` +
+      (errorCount > 0 ? `, ${errorCount} error${errorCount !== 1 ? 's' : ''}` : '') +
+      ` \u00B7 ${totalTokens.toLocaleString()} total tokens \u00B7 ${totalCents} total cost`;
+    logTotals.style.display = '';
+  } else {
+    logTotals.textContent = `${errorCount} error${errorCount !== 1 ? 's' : ''}`;
+    logTotals.style.display = '';
+  }
+}
+
+clearLogBtn.addEventListener('click', () => {
+  chrome.storage.local.set({ generationLog: [] }, () => {
+    loadLog();
+  });
+});
+
+// Load log on page open
+loadLog();
+
+// Refresh log when storage changes (e.g., new generation while page is open)
+chrome.storage.onChanged.addListener((changes) => {
+  if (changes.generationLog) {
+    loadLog();
+  }
+});
+
 // ── Helpers ─────────────────────────────────────────────────
 
 function setStatus(el, text, className) {
@@ -169,4 +276,23 @@ function getStoredKey() {
       resolve(result.apiKey || '');
     });
   });
+}
+
+function formatTime(ts) {
+  if (!ts) return '';
+  const d = new Date(ts);
+  const now = new Date();
+  const timeStr = d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+  // Show date if not today
+  if (d.toDateString() !== now.toDateString()) {
+    return d.toLocaleDateString([], { month: 'short', day: 'numeric' }) + ' ' + timeStr;
+  }
+  return timeStr;
+}
+
+function truncateUrl(url, max) {
+  if (!url) return '';
+  if (url.startsWith('data:')) return '(data URL)';
+  if (url.length <= max) return url;
+  return url.slice(0, max - 1) + '\u2026';
 }

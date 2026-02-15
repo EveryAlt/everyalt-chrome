@@ -9,7 +9,7 @@
  */
 
 import { generateAltText, validateApiKey } from './lib/openai-api.js';
-import { imageUrlToBase64, getSettings } from './lib/utils.js';
+import { imageUrlToBase64, getSettings, addLogEntry } from './lib/utils.js';
 
 // ── Context Menu Registration ───────────────────────────────────────
 
@@ -66,7 +66,16 @@ chrome.contextMenus.onClicked.addListener(async (info, tab) => {
       customPrompt: settings.customPrompt,
     });
 
-    // 4. Send result to content script
+    // 4. Log success
+    await addLogEntry({
+      status: 'success',
+      imageUrl: info.srcUrl,
+      altText: result.altText,
+      usage: result.usage,
+      cost: result.cost,
+    });
+
+    // 5. Send result to content script
     sendToTab(tab.id, {
       type: 'EVERYALT_SHOW_RESULT',
       altText: result.altText,
@@ -75,6 +84,13 @@ chrome.contextMenus.onClicked.addListener(async (info, tab) => {
       cost: result.cost,
     });
   } catch (err) {
+    // Log error
+    await addLogEntry({
+      status: 'error',
+      imageUrl: info.srcUrl,
+      error: err.message || 'Unknown error',
+    });
+
     sendToTab(tab.id, {
       type: 'EVERYALT_SHOW_ERROR',
       message: err.message || 'An unexpected error occurred.',
@@ -97,6 +113,16 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
 
   if (request.type === 'EVERYALT_GET_SETTINGS') {
     getSettings().then(sendResponse);
+    return true;
+  }
+
+  if (request.type === 'EVERYALT_GET_LOG') {
+    import('./lib/utils.js').then((m) => m.getLog()).then(sendResponse);
+    return true;
+  }
+
+  if (request.type === 'EVERYALT_CLEAR_LOG') {
+    import('./lib/utils.js').then((m) => m.clearLog()).then(sendResponse);
     return true;
   }
 
@@ -140,6 +166,14 @@ async function handleRegenerate(request, sender) {
       customPrompt: request.customPrompt || settings.customPrompt,
     });
 
+    await addLogEntry({
+      status: 'success',
+      imageUrl: request.imageUrl,
+      altText: result.altText,
+      usage: result.usage,
+      cost: result.cost,
+    });
+
     sendToTab(tabId, {
       type: 'EVERYALT_SHOW_RESULT',
       altText: result.altText,
@@ -148,6 +182,12 @@ async function handleRegenerate(request, sender) {
       cost: result.cost,
     });
   } catch (err) {
+    await addLogEntry({
+      status: 'error',
+      imageUrl: request.imageUrl,
+      error: err.message || 'Regeneration failed',
+    });
+
     sendToTab(tabId, {
       type: 'EVERYALT_SHOW_ERROR',
       message: err.message || 'Regeneration failed.',

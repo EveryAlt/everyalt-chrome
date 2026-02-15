@@ -263,24 +263,47 @@
     }
   }
 
-  // ── Image Fetch (CORS fallback for service worker) ──────────────
+  // ── Image Fetch + Resize (CORS fallback for service worker) ─────
+
+  const MAX_DIMENSION = 300;
 
   async function fetchImageAsBase64(url) {
-    if (url.startsWith('data:')) return url;
+    let blob;
 
-    const response = await fetch(url);
-    if (!response.ok) throw new Error(`Fetch failed (${response.status})`);
-
-    const blob = await response.blob();
-    if (blob.size > 4 * 1024 * 1024) {
-      throw new Error('Image is too large (over 4MB).');
+    if (url.startsWith('data:')) {
+      const res = await fetch(url);
+      blob = await res.blob();
+    } else {
+      const response = await fetch(url);
+      if (!response.ok) throw new Error(`Fetch failed (${response.status})`);
+      blob = await response.blob();
     }
+
+    if (blob.size > 20 * 1024 * 1024) {
+      throw new Error('Image is too large (over 20 MB).');
+    }
+
+    // Resize to MAX_DIMENSION on largest side
+    const bitmap = await createImageBitmap(blob);
+    let { width, height } = bitmap;
+    if (width > MAX_DIMENSION || height > MAX_DIMENSION) {
+      const scale = MAX_DIMENSION / Math.max(width, height);
+      width = Math.round(width * scale);
+      height = Math.round(height * scale);
+    }
+
+    const canvas = new OffscreenCanvas(width, height);
+    const ctx = canvas.getContext('2d');
+    ctx.drawImage(bitmap, 0, 0, width, height);
+    bitmap.close();
+
+    const outBlob = await canvas.convertToBlob({ type: 'image/jpeg', quality: 0.85 });
 
     return new Promise((resolve, reject) => {
       const reader = new FileReader();
       reader.onloadend = () => resolve(reader.result);
-      reader.onerror = () => reject(new Error('Failed to encode image.'));
-      reader.readAsDataURL(blob);
+      reader.onerror = () => reject(new Error('Failed to encode resized image.'));
+      reader.readAsDataURL(outBlob);
     });
   }
 
