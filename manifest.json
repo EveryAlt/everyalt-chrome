@@ -1,0 +1,34 @@
+{
+  "manifest_version": 3,
+  "name": "EveryAlt - AI Alt Text Generator",
+  "version": "1.0.0",
+  "description": "Right-click any image to instantly generate descriptive alt text using OpenAI. Free, unlimited, your key.",
+  "icons": {
+    "16": "images/icon-16.png",
+    "48": "images/icon-48.png",
+    "128": "images/icon-128.png"
+  },
+  "permissions": [
+    "contextMenus",
+    "storage",
+    "activeTab",
+    "scripting"
+  ],
+  "host_permissions": [
+    "https://api.openai.com/*",
+    "<all_urls>"
+  ],
+  "background": {
+    "service_worker": "service-worker.js",
+    "type": "module"
+  },
+  "action": {
+    "default_popup": "popup.html",
+    "default_icon": {
+      "16": "images/icon-16.png",
+      "48": "images/icon-48.png",
+      "128": "images/icon-128.png"
+    }
+  },
+  "options_page": "options.html"
+}

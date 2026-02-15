@@ -1,0 +1,295 @@
+/*
+ * EveryAlt Chrome Extension - Options Page Styles
+ */
+
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  font-size: 14px;
+  line-height: 1.5;
+  color: #1f2937;
+  background: #f3f4f6;
+  min-height: 100vh;
+}
+
+a {
+  color: #0750b6;
+  text-decoration: none;
+}
+a:hover {
+  text-decoration: underline;
+}
+
+/* ── Options Container ───────────────────────────────────────── */
+
+.everyalt-options {
+  max-width: 640px;
+  margin: 0 auto;
+  padding: 0 16px 48px;
+}
+
+/* ── Header ──────────────────────────────────────────────────── */
+
+.everyalt-header {
+  padding: 32px 0 24px;
+}
+
+.everyalt-header-inner {
+  text-align: center;
+}
+
+.everyalt-brand {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+
+.everyalt-brand h1 {
+  font-size: 24px;
+  font-weight: 800;
+  color: #0750b6;
+  letter-spacing: -0.02em;
+}
+
+.everyalt-tagline {
+  margin-top: 4px;
+  color: #6b7280;
+  font-size: 14px;
+}
+
+/* ── Cards ───────────────────────────────────────────────────── */
+
+.everyalt-card {
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  padding: 24px;
+  margin-bottom: 16px;
+}
+
+.everyalt-card h2 {
+  font-size: 16px;
+  font-weight: 700;
+  color: #111827;
+  margin-bottom: 4px;
+}
+
+.everyalt-help {
+  color: #6b7280;
+  font-size: 13px;
+  margin-bottom: 16px;
+  line-height: 1.5;
+}
+
+.everyalt-help-sm {
+  color: #9ca3af;
+  font-size: 12px;
+  margin-top: 4px;
+}
+
+/* ── Form Elements ───────────────────────────────────────────── */
+
+.everyalt-field-row {
+  display: flex;
+  gap: 8px;
+  align-items: stretch;
+}
+
+.everyalt-field-row input {
+  flex: 1;
+}
+
+input[type="text"],
+input[type="password"],
+input[type="number"],
+textarea,
+select {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  font-size: 14px;
+  font-family: inherit;
+  color: #1f2937;
+  background: #ffffff;
+  outline: none;
+  transition: border-color 0.15s, box-shadow 0.15s;
+}
+
+input:focus,
+textarea:focus,
+select:focus {
+  border-color: #0750b6;
+  box-shadow: 0 0 0 3px rgba(7, 80, 182, 0.15);
+}
+
+textarea {
+  resize: vertical;
+  min-height: 80px;
+}
+
+select {
+  cursor: pointer;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath d='M3 5l3 3 3-3' fill='none' stroke='%236B7280' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  padding-right: 36px;
+}
+
+.everyalt-form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+.everyalt-form-group label {
+  display: block;
+  font-size: 13px;
+  font-weight: 600;
+  color: #374151;
+  margin-bottom: 6px;
+}
+
+/* ── Buttons ─────────────────────────────────────────────────── */
+
+.everyalt-btn-primary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px 24px;
+  background: #0750b6;
+  color: #ffffff;
+  border: none;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  font-family: inherit;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.everyalt-btn-primary:hover {
+  background: #054a9e;
+}
+
+.everyalt-btn-primary:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.everyalt-btn-outline {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px 16px;
+  background: #ffffff;
+  color: #374151;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  font-family: inherit;
+  cursor: pointer;
+  transition: all 0.15s;
+  white-space: nowrap;
+}
+
+.everyalt-btn-outline:hover {
+  background: #f9fafb;
+  border-color: #9ca3af;
+}
+
+.everyalt-btn-outline:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.everyalt-link-btn {
+  background: none;
+  border: none;
+  color: #0750b6;
+  font-size: 12px;
+  font-family: inherit;
+  cursor: pointer;
+  margin-top: 8px;
+  padding: 0;
+}
+
+.everyalt-link-btn:hover {
+  text-decoration: underline;
+}
+
+/* ── Status Messages ─────────────────────────────────────────── */
+
+.everyalt-status {
+  margin-top: 8px;
+  font-size: 13px;
+  font-weight: 500;
+  min-height: 20px;
+}
+
+.everyalt-status.success {
+  color: #059669;
+}
+
+.everyalt-status.error {
+  color: #dc2626;
+}
+
+.everyalt-status.validating {
+  color: #6b7280;
+}
+
+/* ── Save Row ────────────────────────────────────────────────── */
+
+.everyalt-save-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: 8px;
+}
+
+.everyalt-save-status {
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.everyalt-save-status.success {
+  color: #059669;
+}
+
+.everyalt-save-status.error {
+  color: #dc2626;
+}
+
+/* ── Footer ──────────────────────────────────────────────────── */
+
+.everyalt-footer {
+  margin-top: 32px;
+  text-align: center;
+  padding: 16px 0;
+  border-top: 1px solid #e5e7eb;
+}
+
+.everyalt-footer p {
+  color: #9ca3af;
+  font-size: 12px;
+}
+
+/* ── Responsive ──────────────────────────────────────────────── */
+
+@media (max-width: 500px) {
+  .everyalt-form-grid {
+    grid-template-columns: 1fr;
+  }
+  .everyalt-field-row {
+    flex-direction: column;
+  }
+}

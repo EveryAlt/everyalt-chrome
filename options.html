@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>EveryAlt Settings</title>
+  <link rel="stylesheet" href="options.css">
+</head>
+<body>
+  <div class="everyalt-options">
+    <!-- Header -->
+    <header class="everyalt-header">
+      <div class="everyalt-header-inner">
+        <div class="everyalt-brand">
+          <svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="#0750b6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
+            <circle cx="8.5" cy="8.5" r="1.5"/>
+            <polyline points="21 15 16 10 5 21"/>
+          </svg>
+          <h1>EveryAlt</h1>
+        </div>
+        <p class="everyalt-tagline">AI-powered alt text for every image</p>
+      </div>
+    </header>
+
+    <!-- Main content -->
+    <main class="everyalt-main">
+
+      <!-- API Key Section -->
+      <section class="everyalt-card">
+        <h2>OpenAI API Key</h2>
+        <p class="everyalt-help">
+          Your API key is used to call OpenAI's Vision API. You are billed directly by OpenAI for usage; EveryAlt is free.
+          <a href="https://platform.openai.com/api-keys" target="_blank" rel="noopener">Get an API key</a>
+        </p>
+        <div class="everyalt-field-row">
+          <input
+            type="password"
+            id="api-key"
+            placeholder="sk-..."
+            autocomplete="off"
+            spellcheck="false"
+          >
+          <button type="button" id="validate-btn" class="everyalt-btn-outline">Validate</button>
+        </div>
+        <div id="key-status" class="everyalt-status" aria-live="polite"></div>
+      </section>
+
+      <!-- Prompt Section -->
+      <section class="everyalt-card">
+        <h2>Alt Text Prompt</h2>
+        <p class="everyalt-help">
+          This instruction is sent to the AI with each image. The model should return only the alt text.
+        </p>
+        <textarea
+          id="custom-prompt"
+          rows="4"
+          placeholder="Describe this image in one short, clear sentence..."
+        ></textarea>
+        <button type="button" id="reset-prompt-btn" class="everyalt-link-btn">Reset to default</button>
+      </section>
+
+      <!-- Advanced -->
+      <section class="everyalt-card">
+        <h2>Advanced</h2>
+        <p class="everyalt-help">
+          EveryAlt uses <strong>gpt-5-nano</strong>, the cheapest and most efficient vision model. A typical image costs roughly 0.02&cent;.
+        </p>
+        <div class="everyalt-form-group">
+          <label for="max-tokens">Max completion tokens</label>
+          <input type="number" id="max-tokens" min="1" max="4096" step="1" value="1024">
+          <p class="everyalt-help-sm">Maximum tokens the model can use for the response (including reasoning). Default: 1024.</p>
+        </div>
+      </section>
+
+      <!-- Save Button -->
+      <div class="everyalt-save-row">
+        <button type="button" id="save-btn" class="everyalt-btn-primary">Save Settings</button>
+        <span id="save-status" class="everyalt-save-status" aria-live="polite"></span>
+      </div>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="everyalt-footer">
+      <p>EveryAlt v1.0.0 &mdash; Free, unlimited, your key. By <a href="https://hdc.net" target="_blank" rel="noopener">HDC</a></p>
+    </footer>
+  </div>
+
+  <script src="options.js"></script>
+</body>
+</html>
