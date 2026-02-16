@@ -88,10 +88,9 @@
     const body = modal.querySelector(`.${PREFIX}-modal-body`);
     body.innerHTML = '';
 
-    // Alt text in a readonly textarea (easy to select all)
+    // Alt text in an editable textarea (easy to select all or make quick edits)
     const textarea = el('textarea', `${PREFIX}-alt-textarea`);
     textarea.value = altText;
-    textarea.readOnly = true;
     textarea.rows = 3;
     textarea.setAttribute('aria-label', 'Generated alt text');
     body.appendChild(textarea);
@@ -114,7 +113,7 @@
     const copyBtn = el('button', `${PREFIX}-btn ${PREFIX}-btn-primary`);
     copyBtn.textContent = 'Copy';
     copyBtn.addEventListener('click', () => {
-      navigator.clipboard.writeText(altText).then(() => {
+      navigator.clipboard.writeText(textarea.value).then(() => {
         copyBtn.textContent = 'Copied!';
         copyBtn.classList.add(`${PREFIX}-btn-success`);
         setTimeout(() => {
