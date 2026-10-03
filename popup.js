@@ -2,21 +2,26 @@
  * EveryAlt Chrome Extension - Popup Logic
  */
 
+import { getSettings } from './lib/utils.js';
+import { MODELS, PROVIDERS } from './lib/providers.js';
+
 const statusDot = document.getElementById('status-dot');
 const statusText = document.getElementById('status-text');
 const settingsBtn = document.getElementById('settings-btn');
 
-// Check if API key is configured
-chrome.storage.local.get(['apiKey', 'apiKeyValidated'], (result) => {
-  if (result.apiKey && result.apiKeyValidated) {
+// Check that the selected model's provider has a key
+getSettings().then((settings) => {
+  const model = MODELS[settings.model].label;
+  const provider = PROVIDERS[settings.provider].label;
+  if (settings.apiKey && settings.apiKeyValidated) {
     statusDot.className = 'everyalt-status-dot ready';
-    statusText.textContent = 'Ready to use';
-  } else if (result.apiKey) {
+    statusText.textContent = `Ready · ${model}`;
+  } else if (settings.apiKey) {
     statusDot.className = 'everyalt-status-dot warning';
-    statusText.textContent = 'API key saved (not yet validated)';
+    statusText.textContent = `${provider} API key saved (not yet validated)`;
   } else {
     statusDot.className = 'everyalt-status-dot warning';
-    statusText.textContent = 'API key needed';
+    statusText.textContent = `${provider} API key needed`;
   }
 });
 

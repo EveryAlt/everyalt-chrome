@@ -1,8 +1,8 @@
 {
   "manifest_version": 3,
   "name": "EveryAlt - AI Alt Text Generator",
-  "version": "1.0.0",
-  "description": "Right-click any image to instantly generate descriptive alt text using OpenAI. Free, unlimited, your key.",
+  "version": "1.1.0",
+  "description": "Right-click any image to generate descriptive alt text with OpenAI, Google Gemini, or DeepInfra. Free, unlimited, your key.",
   "icons": {
     "16": "images/icon-16.png",
     "48": "images/icon-48.png",
@@ -16,6 +16,8 @@
   ],
   "host_permissions": [
     "https://api.openai.com/*",
+    "https://generativelanguage.googleapis.com/*",
+    "https://api.deepinfra.com/*",
     "<all_urls>"
   ],
   "background": {

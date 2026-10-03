@@ -19,31 +19,84 @@
           <h1>EveryAlt</h1>
         </div>
         <p class="everyalt-tagline">Free, open-source alternative text generator for every image. Just right click on any image to generate alt text that you can easily copy and paste.</p>
-        <p class="everyalt-tagline">Created by <a href="https://hdc.net" target="_blank" rel="noopener">HDC</a>. We also have a WordPress plugin. Learn more at <a href="https://everyalt.com" target="_blank" rel="noopener">EveryAlt.com</a>.</p>
+        <p class="everyalt-tagline">Created by <a href="https://hdc.net" target="_blank" rel="noopener">HDC<span class="everyalt-sr-only"> (opens in a new tab)</span></a>. We also have a WordPress plugin. Learn more at <a href="https://everyalt.com" target="_blank" rel="noopener">EveryAlt.com<span class="everyalt-sr-only"> (opens in a new tab)</span></a>.</p>
       </div>
     </header>
 
     <!-- Main content -->
     <main class="everyalt-main">
 
+      <!-- Model Section -->
+      <section class="everyalt-card">
+        <h2 id="model-heading">AI model</h2>
+        <fieldset class="everyalt-model-list" aria-labelledby="model-heading">
+          <!-- Filled from lib/providers.js by options.js -->
+        </fieldset>
+        <p class="everyalt-help">
+          All models read the image and write alt text the same way. Prices are each provider’s published rates as of
+          <span id="prices-as-of"></span> and may change. You pay the provider directly; EveryAlt never bills you.
+          The cost of each image is shown under Recent Generations.
+        </p>
+        <p class="everyalt-help" id="pricing-links"></p>
+      </section>
+
       <!-- API Key Section -->
       <section class="everyalt-card">
-        <h2>OpenAI API Key</h2>
-        <p class="everyalt-help">
-          Your API key is used to call OpenAI's Vision API. You are billed directly by OpenAI for usage; EveryAlt is free.
-          <a href="https://platform.openai.com/api-keys" target="_blank" rel="noopener">Get an API key</a>
-        </p>
-        <div class="everyalt-field-row">
-          <input
-            type="password"
-            id="api-key"
-            placeholder="sk-..."
-            autocomplete="off"
-            spellcheck="false"
-          >
-          <button type="button" id="validate-btn" class="everyalt-btn-outline">Validate</button>
+        <h2>API key</h2>
+
+        <div class="everyalt-provider-key" data-provider="openai">
+          <h3><label for="key-openai">OpenAI API key</label> <span class="everyalt-key-badge" data-badge="openai"></span></h3>
+          <div class="everyalt-field-row">
+            <input type="password" id="key-openai" data-provider="openai" placeholder="sk-..." autocomplete="off" spellcheck="false">
+            <button type="button" class="everyalt-btn-outline everyalt-validate" data-provider="openai">Validate</button>
+          </div>
+          <div class="everyalt-status" data-status="openai" aria-live="polite"></div>
+          <ol class="everyalt-steps">
+            <li>Sign in at <a href="https://platform.openai.com/api-keys" target="_blank" rel="noopener">platform.openai.com/api-keys<span class="everyalt-sr-only"> (opens in a new tab)</span></a>.</li>
+            <li>Click “Create new secret key”, give it a name (e.g. “EveryAlt”), and copy the key. It is only shown once.</li>
+            <li>Add a payment method or prepaid credits in your OpenAI billing settings; generation fails until your account has credit.</li>
+          </ol>
+          <p class="everyalt-help-sm">OpenAI does not use API data to train its models by default. See <a href="https://openai.com/enterprise-privacy/" target="_blank" rel="noopener">OpenAI API data usage<span class="everyalt-sr-only"> (opens in a new tab)</span></a>.</p>
         </div>
-        <div id="key-status" class="everyalt-status" aria-live="polite"></div>
+
+        <div class="everyalt-provider-key" data-provider="gemini">
+          <h3><label for="key-gemini">Google Gemini API key</label> <span class="everyalt-key-badge" data-badge="gemini"></span></h3>
+          <div class="everyalt-field-row">
+            <input type="password" id="key-gemini" data-provider="gemini" placeholder="AIza..." autocomplete="off" spellcheck="false">
+            <button type="button" class="everyalt-btn-outline everyalt-validate" data-provider="gemini">Validate</button>
+          </div>
+          <div class="everyalt-status" data-status="gemini" aria-live="polite"></div>
+          <ol class="everyalt-steps">
+            <li>Sign in to Google AI Studio at <a href="https://aistudio.google.com/apikey" target="_blank" rel="noopener">aistudio.google.com/apikey<span class="everyalt-sr-only"> (opens in a new tab)</span></a>.</li>
+            <li>Click “Create API key”, choose or create a Google Cloud project, and copy the key.</li>
+            <li>Optional: set up billing on the project to move from the free tier to the paid tier.</li>
+          </ol>
+          <p class="everyalt-help-sm">Gemini has a free tier, but Google may use free-tier prompts and images to improve its products. On the paid tier (billing enabled), your content is not used that way. See the <a href="https://ai.google.dev/gemini-api/terms" target="_blank" rel="noopener">Gemini API terms<span class="everyalt-sr-only"> (opens in a new tab)</span></a>.</p>
+        </div>
+
+        <div class="everyalt-provider-key" data-provider="deepinfra">
+          <h3><label for="key-deepinfra">DeepInfra API key</label> <span class="everyalt-key-badge" data-badge="deepinfra"></span></h3>
+          <div class="everyalt-field-row">
+            <input type="password" id="key-deepinfra" data-provider="deepinfra" placeholder="Paste your API key" autocomplete="off" spellcheck="false">
+            <button type="button" class="everyalt-btn-outline everyalt-validate" data-provider="deepinfra">Validate</button>
+          </div>
+          <div class="everyalt-status" data-status="deepinfra" aria-live="polite"></div>
+          <ol class="everyalt-steps">
+            <li>Sign in or create an account at <a href="https://deepinfra.com/dash/api_keys" target="_blank" rel="noopener">deepinfra.com/dash/api_keys<span class="everyalt-sr-only"> (opens in a new tab)</span></a>.</li>
+            <li>Click “New API key”, name it (e.g. “EveryAlt”), and copy the key.</li>
+            <li>Add a payment method or credits in your DeepInfra billing settings. One DeepInfra key works for both DeepSeek V4.1 Flash and GLM-5.3-Flash.</li>
+          </ol>
+          <div class="everyalt-privacy-note">
+            <p><strong>Your images stay private.</strong> DeepInfra runs these models on its own infrastructure in data centers in the US and Canada, with a zero data retention policy: your images and the generated text are processed in memory and not stored, the content of requests is not logged, and your data is never used to train models.</p>
+            <p>
+              <a href="https://docs.deepinfra.com/account/data-privacy" target="_blank" rel="noopener">DeepInfra data privacy<span class="everyalt-sr-only"> (opens in a new tab)</span></a> ·
+              <a href="https://deepinfra.com/privacy" target="_blank" rel="noopener">Privacy policy<span class="everyalt-sr-only"> (opens in a new tab)</span></a> ·
+              <a href="https://trust.deepinfra.com/" target="_blank" rel="noopener">Trust center (SOC 2, ISO 27001)<span class="everyalt-sr-only"> (opens in a new tab)</span></a>
+            </p>
+          </div>
+        </div>
+
+        <p class="everyalt-help-sm">Keys are stored only in this browser (chrome.storage.local) and sent only to the provider you choose.</p>
       </section>
 
       <!-- Prompt Section -->
@@ -63,13 +116,10 @@
       <!-- Advanced -->
       <section class="everyalt-card">
         <h2>Advanced</h2>
-        <p class="everyalt-help">
-          EveryAlt uses <strong>gpt-5-nano</strong>, the cheapest and most efficient vision model. A typical image costs roughly 0.02&cent;.
-        </p>
         <div class="everyalt-form-group">
           <label for="max-tokens">Max completion tokens</label>
           <input type="number" id="max-tokens" min="1" max="4096" step="1" value="1024">
-          <p class="everyalt-help-sm">Maximum tokens the model can use for the response (including reasoning). Default: 1024.</p>
+          <p class="everyalt-help-sm">Maximum tokens the model can use for the response (including any reasoning). Default: 1024.</p>
         </div>
       </section>
 
@@ -85,7 +135,7 @@
           <h2>Recent Generations</h2>
           <button type="button" id="clear-log-btn" class="everyalt-link-btn">Clear log</button>
         </div>
-        <p class="everyalt-help">Last 10 images processed. Token usage and estimated cost per generation.</p>
+        <p class="everyalt-help">Last 10 images processed, with the model used, token usage, and estimated cost.</p>
         <div id="log-container" class="everyalt-log-container">
           <p class="everyalt-log-empty">No generations yet. Right-click an image to get started.</p>
         </div>
@@ -96,10 +146,10 @@
 
     <!-- Footer -->
     <footer class="everyalt-footer">
-      <p>EveryAlt v1.0.0 &mdash; Free, unlimited, your key. By <a href="https://hdc.net" target="_blank" rel="noopener">HDC</a></p>
+      <p>EveryAlt v<span id="ext-version"></span> &mdash; Free, unlimited, your key. By <a href="https://hdc.net" target="_blank" rel="noopener">HDC<span class="everyalt-sr-only"> (opens in a new tab)</span></a></p>
     </footer>
   </div>
 
-  <script src="options.js"></script>
+  <script type="module" src="options.js"></script>
 </body>
 </html>
