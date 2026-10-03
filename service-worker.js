@@ -4,20 +4,26 @@
  * Responsibilities:
  *  - Register context menu on install
  *  - Handle context menu clicks (image right-click)
- *  - Fetch image, convert to base64, call OpenAI
+ *  - Fetch image, convert to base64, call the selected AI provider (OpenAI, Gemini, or DeepInfra)
  *  - Send results to content script for modal display
  */
 
-import { generateAltText, validateApiKey } from './lib/openai-api.js';
-import { imageUrlToBase64, getSettings, addLogEntry } from './lib/utils.js';
+import { generateAltText, validateApiKey } from './lib/ai-api.js';
+import { imageUrlToBase64, getSettings, addLogEntry, migrateStorage } from './lib/utils.js';
+import { PROVIDERS } from './lib/providers.js';
 
 // ── Context Menu Registration ───────────────────────────────────────
 
-chrome.runtime.onInstalled.addListener(() => {
-  chrome.contextMenus.create({
-    id: 'generate-alt-text',
-    title: 'Generate Alt Text with EveryAlt',
-    contexts: ['image'],
+chrome.runtime.onInstalled.addListener(async () => {
+  // Convert 1.0 settings (single OpenAI key, gpt-5-nano) on install and on every update.
+  await migrateStorage();
+  // Menus persist across updates, so clear before creating to avoid a duplicate-id error.
+  chrome.contextMenus.removeAll(() => {
+    chrome.contextMenus.create({
+      id: 'generate-alt-text',
+      title: 'Generate Alt Text with EveryAlt',
+      contexts: ['image'],
+    });
   });
 });
 
@@ -39,7 +45,7 @@ chrome.contextMenus.onClicked.addListener(async (info, tab) => {
     if (!settings.apiKey) {
       sendToTab(tab.id, {
         type: 'EVERYALT_SHOW_ERROR',
-        message: 'API key not configured. Click to open EveryAlt settings.',
+        message: `${PROVIDERS[settings.provider].label} API key not configured. Click to open EveryAlt settings.`,
         actionUrl: chrome.runtime.getURL('options.html'),
       });
       return;
@@ -58,7 +64,7 @@ chrome.contextMenus.onClicked.addListener(async (info, tab) => {
       }
     }
 
-    // 3. Call OpenAI API
+    // 3. Call the selected model
     const result = await generateAltText(base64DataUrl, {
       apiKey: settings.apiKey,
       model: settings.model,
@@ -73,6 +79,7 @@ chrome.contextMenus.onClicked.addListener(async (info, tab) => {
       altText: result.altText,
       usage: result.usage,
       cost: result.cost,
+      model: result.model,
     });
 
     // 5. Send result to content script
@@ -89,6 +96,7 @@ chrome.contextMenus.onClicked.addListener(async (info, tab) => {
       status: 'error',
       imageUrl: info.srcUrl,
       error: err.message || 'Unknown error',
+      model: (await getSettings()).model,
     });
 
     sendToTab(tab.id, {
@@ -107,7 +115,7 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   }
 
   if (request.type === 'EVERYALT_VALIDATE_KEY') {
-    validateApiKey(request.apiKey).then(sendResponse);
+    validateApiKey(request.provider || 'openai', request.apiKey).then(sendResponse);
     return true; // keep channel open for async response
   }
 
@@ -137,7 +145,8 @@ async function handleRegenerate(request, sender) {
     if (!settings.apiKey) {
       sendToTab(tabId, {
         type: 'EVERYALT_SHOW_ERROR',
-        message: 'API key not configured.',
+        message: `${PROVIDERS[settings.provider].label} API key not configured.`,
+        actionUrl: chrome.runtime.getURL('options.html'),
       });
       return;
     }
@@ -162,6 +171,7 @@ async function handleRegenerate(request, sender) {
       altText: result.altText,
       usage: result.usage,
       cost: result.cost,
+      model: result.model,
     });
 
     sendToTab(tabId, {
@@ -176,6 +186,7 @@ async function handleRegenerate(request, sender) {
       status: 'error',
       imageUrl: request.imageUrl,
       error: err.message || 'Regeneration failed',
+      model: (await getSettings()).model,
     });
 
     sendToTab(tabId, {

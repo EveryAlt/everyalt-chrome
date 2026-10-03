@@ -145,7 +145,7 @@
 .everyalt-cost-info {
   margin: 8px 0 0 !important;
   font-size: 12px !important;
-  color: #9ca3af !important;
+  color: #4b5563 !important; /* 7.6:1 (was #9ca3af, 2.5:1) */
 }
 
 /* ── Actions ─────────────────────────────────────────────────── */
@@ -187,8 +187,8 @@
 }
 
 .everyalt-btn-success {
-  background: #059669 !important;
-  border-color: #059669 !important;
+  background: #047857 !important; /* white text 5.5:1 (was #059669, 3.8:1) */
+  border-color: #047857 !important;
   color: #ffffff !important;
 }
 

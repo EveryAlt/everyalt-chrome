@@ -59,7 +59,7 @@ a:hover {
 
 .everyalt-tagline {
   margin-top: 4px;
-  color: #6b7280;
+  color: #4b5563; /* 7.0:1 on the page background (was #6b7280, 4.4:1) */
   font-size: 14px;
 }
 
@@ -92,7 +92,7 @@ a:hover {
 }
 
 .everyalt-help-sm {
-  color: #9ca3af;
+  color: #6b7280; /* 4.8:1 on white (was #9ca3af, 2.5:1) */
   font-size: 12px;
   margin-top: 4px;
 }
@@ -240,11 +240,11 @@ select {
 }
 
 .everyalt-status.success {
-  color: #059669;
+  color: #047857; /* 5.5:1 on white (was #059669, 3.8:1) */
 }
 
 .everyalt-status.error {
-  color: #dc2626;
+  color: #b91c1c; /* 5.9:1 on #fef2f2 (was #dc2626, 4.4:1) */
 }
 
 .everyalt-status.validating {
@@ -267,11 +267,11 @@ select {
 }
 
 .everyalt-save-status.success {
-  color: #059669;
+  color: #047857;
 }
 
 .everyalt-save-status.error {
-  color: #dc2626;
+  color: #b91c1c; /* 5.9:1 on #fef2f2 (was #dc2626, 4.4:1) */
 }
 
 /* ── Generation Log ──────────────────────────────────────────── */
@@ -291,7 +291,7 @@ select {
 }
 
 .everyalt-log-empty {
-  color: #9ca3af;
+  color: #4b5563; /* 7.6:1 (was #9ca3af, 2.5:1) */
   font-size: 13px;
   font-style: italic;
 }
@@ -320,7 +320,7 @@ select {
   flex-shrink: 0;
   width: 74px;
   font-size: 11px;
-  color: #9ca3af;
+  color: #4b5563; /* 7.6:1 (was #9ca3af, 2.5:1) */
   padding-top: 2px;
   line-height: 1.4;
 }
@@ -341,13 +341,13 @@ select {
 .everyalt-log-meta {
   display: block;
   font-size: 11px;
-  color: #6b7280;
+  color: #4b5563;
 }
 
 .everyalt-log-error-msg {
   margin: 0 0 2px;
   font-size: 13px;
-  color: #dc2626;
+  color: #b91c1c; /* 5.9:1 on #fef2f2 (was #dc2626, 4.4:1) */
   line-height: 1.4;
   word-break: break-word;
 }
@@ -355,7 +355,7 @@ select {
 .everyalt-log-url {
   display: block;
   font-size: 11px;
-  color: #9ca3af;
+  color: #4b5563; /* 7.6:1 (was #9ca3af, 2.5:1) */
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -383,7 +383,7 @@ select {
 }
 
 .everyalt-footer p {
-  color: #9ca3af;
+  color: #4b5563; /* 7.6:1 (was #9ca3af, 2.5:1) */
   font-size: 12px;
 }
 
@@ -396,4 +396,128 @@ select {
   .everyalt-field-row {
     flex-direction: column;
   }
+}
+
+/* ── Model picker & per-provider keys ────────────────────────── */
+
+.everyalt-sr-only {
+  position: absolute !important;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.everyalt-model-list {
+  border: 0;
+  padding: 0;
+  margin: 12px 0 16px;
+  display: grid;
+  gap: 8px;
+}
+
+.everyalt-model-option {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  column-gap: 10px;
+  align-items: baseline;
+  padding: 10px 14px;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.everyalt-model-option input {
+  grid-row: span 3;
+  margin: 3px 0 0;
+}
+
+.everyalt-model-option:has(input:checked) {
+  border-color: #0750b6;
+  box-shadow: 0 0 0 1px #0750b6;
+}
+
+.everyalt-model-option input:focus-visible {
+  outline: 2px solid #0750b6;
+  outline-offset: 2px;
+}
+
+.everyalt-model-provider,
+.everyalt-model-price {
+  display: block;
+  color: #6b7280;
+  font-size: 13px;
+}
+
+.everyalt-provider-key h3 {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 14px;
+  margin: 12px 0 8px;
+  color: #111827;
+}
+
+.everyalt-key-badge {
+  font-size: 12px;
+  font-weight: 500;
+  padding: 1px 8px;
+  border-radius: 10px;
+}
+
+.everyalt-key-badge.is-saved {
+  background: #ecfdf5;
+  color: #047857; /* 5.2:1 */
+}
+
+.everyalt-key-badge.is-missing {
+  background: #fffbeb;
+  color: #92400e; /* 6.8:1 */
+}
+
+.everyalt-steps {
+  margin: 12px 0 8px 20px;
+  color: #374151;
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.everyalt-steps li {
+  margin-bottom: 4px;
+}
+
+.everyalt-privacy-note {
+  margin-top: 12px;
+  padding: 10px 14px;
+  border-left: 4px solid #047857;
+  background: #f9fafb;
+  border-radius: 0 8px 8px 0;
+  font-size: 13px;
+  color: #374151;
+  line-height: 1.5;
+}
+
+.everyalt-privacy-note p + p {
+  margin-top: 6px;
+}
+
+/* Busy buttons use aria-disabled (not disabled) so keyboard focus stays put. */
+.everyalt-btn-primary[aria-disabled="true"],
+.everyalt-btn-outline[aria-disabled="true"] {
+  opacity: 0.6;
+  cursor: default;
+}
+
+/* Links inside sentences are underlined, so they don't rely on color alone (WCAG 1.4.1). */
+.everyalt-tagline a,
+.everyalt-footer a,
+.everyalt-help a,
+.everyalt-help-sm a,
+.everyalt-steps a,
+.everyalt-privacy-note a {
+  text-decoration: underline;
 }

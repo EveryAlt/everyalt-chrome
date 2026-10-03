@@ -13,9 +13,18 @@ Created by [HDC](https://hdc.net). We also have a [WordPress plugin](https://eve
 3. A dialog appears with AI-generated alt text
 4. Copy the text with one click and paste it wherever you need it
 
-EveryAlt uses OpenAI's Vision API with the **gpt-5-nano** model — the cheapest and most efficient vision-capable model available. A typical image costs roughly **0.02¢** to process.
+Choose your AI model in Settings and bring your own API key from **OpenAI**, **Google Gemini**, or **DeepInfra**. EveryAlt is completely free — you are billed directly by your provider for API usage only.
 
-You bring your own OpenAI API key. EveryAlt is completely free — you are billed directly by OpenAI for API usage only.
+| Model | Provider | Input / 1M tokens | Output / 1M tokens |
+|-------|----------|------------------:|-------------------:|
+| **GPT-6 Luna** (default) | OpenAI | $0.10 | $0.50 |
+| **Gemini 3.1 Flash-Lite** | Google Gemini | $0.25 | $1.50 |
+| **DeepSeek V4.1 Flash** | DeepInfra | $0.20 | $0.60 |
+| **GLM-5.3-Flash** | DeepInfra | $0.15 | $0.50 |
+
+Prices are each provider’s published regular rates as of October 2026 and can change: [OpenAI pricing](https://openai.com/api/pricing/) · [Gemini pricing](https://ai.google.dev/gemini-api/docs/pricing) · [DeepInfra pricing](https://deepinfra.com/pricing). A typical image costs a small fraction of a cent; the exact cost of each one is shown under Recent Generations.
+
+🔒 **DeepInfra** runs its models in its own data centers in the **US and Canada** with **zero data retention**: images and generated text aren't stored, request content isn't logged, and nothing is used for training ([data privacy](https://docs.deepinfra.com/account/data-privacy) · [privacy policy](https://deepinfra.com/privacy) · [trust center](https://trust.deepinfra.com/)). Gemini's free tier may use your content to improve Google's products; the paid tier doesn't ([terms](https://ai.google.dev/gemini-api/terms)).
 
 ---
 
@@ -26,9 +35,10 @@ You bring your own OpenAI API key. EveryAlt is completely free — you are bille
 - **Regenerate on the fly** — Not happy with the result? Hit regenerate without leaving the dialog
 - **Custom prompts** — Tailor the AI instruction to your specific needs (SEO-focused, casual, technical, etc.)
 - **Image optimization** — Images are automatically resized to 300px max dimension before being sent to the API, dramatically reducing token usage and cost
-- **Generation log** — Track your last 10 generations with token counts and cost estimates in the settings page
+- **Choose your AI model** — OpenAI, Google Gemini, or DeepInfra; save keys for several providers and switch any time
+- **Generation log** — Track your last 10 generations with the model used, token counts, and cost estimates in the settings page
 - **Lightweight & fast** — No bundler, no dependencies, just vanilla JS with Chrome's Manifest V3 APIs
-- **Privacy-first** — Your API key is stored locally in Chrome. No data is sent anywhere except directly to OpenAI's API
+- **Privacy-first** — Your API keys are stored locally in Chrome. No data is sent anywhere except directly to the provider you choose
 
 ---
 
@@ -52,10 +62,12 @@ You bring your own OpenAI API key. EveryAlt is completely free — you are bille
 ### Setup
 
 1. Click the EveryAlt icon in the toolbar, then click **Settings**
-2. Enter your OpenAI API key ([get one here](https://platform.openai.com/api-keys))
-3. Click **Validate** to confirm the key works
-4. Click **Save Settings**
+2. Pick an **AI model**
+3. Enter the API key for that provider — [OpenAI](https://platform.openai.com/api-keys), [Google AI Studio](https://aistudio.google.com/apikey), or [DeepInfra](https://deepinfra.com/dash/api_keys). Settings shows step-by-step instructions for each.
+4. Click **Validate** to confirm the key works, then **Save Settings**
 5. You're ready to go — right-click any image to generate alt text
+
+> **Upgrading from 1.0?** Your OpenAI key carries over automatically. 1.0 used `gpt-5-nano`, which OpenAI retires on December 11, 2026; EveryAlt now uses **GPT-6 Luna**, OpenAI's recommended replacement, at a lower price.
 
 ---
 
@@ -65,7 +77,8 @@ All settings are accessible from the extension's options page (click the toolbar
 
 | Setting | Description | Default |
 |---------|-------------|---------|
-| **API Key** | Your OpenAI API key | — |
+| **AI model** | Which provider and model generates alt text | GPT-6 Luna (OpenAI) |
+| **API keys** | One key per provider (OpenAI, Google Gemini, DeepInfra) | — |
 | **Alt Text Prompt** | The instruction sent to the AI with each image | *"Describe this image in one short, clear sentence suitable for HTML alt text..."* |
 | **Max Completion Tokens** | Maximum tokens the model can use for the response | 1024 |
 
@@ -82,7 +95,8 @@ everyalt-chrome/
 ├── popup.html / .js / .css # Extension toolbar popup
 ├── options.html / .js / .css # Settings page (API key, prompt, log)
 ├── lib/
-│   ├── openai-api.js       # OpenAI Chat Completions API module
+│   ├── providers.js        # Models, prices, endpoints (mirrors the WordPress plugin)
+│   ├── ai-api.js           # AI client: Chat Completions (OpenAI, DeepInfra) + Gemini Interactions API
 │   └── utils.js            # Image processing, settings, generation log helpers
 └── images/
     ├── icon.svg            # Source SVG icon
@@ -113,20 +127,21 @@ everyalt-chrome/
 | `activeTab` | Injects the content script into the current tab when you use the context menu |
 | `scripting` | Programmatically injects the content script and CSS |
 | `host_permissions: <all_urls>` | Fetches images from any domain for processing |
-| `host_permissions: api.openai.com` | Sends images to the OpenAI API |
+| `host_permissions: api.openai.com`, `generativelanguage.googleapis.com`, `api.deepinfra.com` | Sends images to the AI provider you choose |
 
 ### Cost
 
-EveryAlt uses **gpt-5-nano**, priced at $0.05 per million input tokens and $0.40 per million output tokens. With the built-in image resizing (300px max dimension), a typical generation costs approximately **0.02¢** — meaning you could process roughly 5,000 images for $1.
+You pay your provider directly; see the model table above for prices. Images are resized to 300px before sending, OpenAI receives them at `detail: low`, and Gemini at low resolution (280 tokens per image). Reasoning is turned off where the model allows it (GPT-6 Luna, DeepSeek V4.1 Flash), because alt text doesn't need it and reasoning tokens are billed as output. Cost estimates include any thinking tokens a provider reports.
 
 ---
 
 ## Privacy & Security
 
-- **Your API key never leaves your machine** — it is stored in `chrome.storage.local` and sent only to `api.openai.com`
-- **No analytics, no tracking, no external servers** — the extension communicates exclusively with OpenAI's API
+- **Your API keys never leave your machine** — they are stored in `chrome.storage.local` and each is sent only to its own provider
+- **No analytics, no tracking, no external servers** — the extension communicates only with the AI provider you choose
 - **No hardcoded secrets** — the codebase is safe to publish publicly
-- **Images are processed in-browser** — resizing happens locally before anything is sent to OpenAI
+- **Images are processed in-browser** — resizing happens locally before anything is sent to the provider
+- **Gemini requests use `store: false`**, so Google doesn't keep them for later retrieval
 
 ---
 
