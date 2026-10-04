@@ -2,7 +2,7 @@
 
 Free, open-source Chrome extension that generates descriptive alt text for any image on the web. Just right-click on any image to generate alt text that you can easily copy and paste.
 
-Created by [HDC](https://hdc.net). We also have a [WordPress plugin](https://everyalt.com). Learn more at [EveryAlt.com](https://everyalt.com).
+Created by [Rob Howard](https://howard.ai). We also have a [WordPress plugin](https://everyalt.com). Learn more at [EveryAlt.com](https://everyalt.com).
 
 ---
 
@@ -48,7 +48,7 @@ Prices are each provider’s published regular rates as of October 2026 and can 
 
 1. Clone this repository:
    ```bash
-   git clone https://github.com/YOUR_USERNAME/everyalt-chrome.git
+   git clone https://github.com/howarddc/everyalt-chrome.git
    ```
 
 2. Open Chrome and navigate to `chrome://extensions/`
@@ -159,4 +159,4 @@ This project is open source. See [LICENSE](LICENSE) for details.
 
 ## Credits
 
-Built by [HDC](https://hdc.net).
+Built by [Rob Howard](https://howard.ai).
